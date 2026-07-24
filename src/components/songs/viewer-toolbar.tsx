@@ -60,7 +60,7 @@ export function ViewerToolbar({
           onClick={onToggleShowChords}
         >
           {showChords ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
-          <span>{showChords ? "Hide chords" : "Show chords"}</span>
+          <span>{showChords ? "Hide chord" : "Show chord"}</span>
         </Button>
       )}
 
@@ -72,30 +72,30 @@ export function ViewerToolbar({
             size="sm"
             className="h-7 px-2.5 rounded-full text-xs gap-1"
             onClick={() => onColumnsChange(1)}
-            title="1 Column"
+            title="One column"
           >
             <LayoutList className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">1 Col</span>
+            <span>One column</span>
           </Button>
           <Button
             variant={columns === 2 ? "accent" : "ghost"}
             size="sm"
             className="h-7 px-2.5 rounded-full text-xs gap-1"
             onClick={() => onColumnsChange(2)}
-            title="2 Columns"
+            title="Two column"
           >
             <Columns2 className="h-3.5 w-3.5" />
-            <span>2 Cols</span>
+            <span>Two column</span>
           </Button>
           <Button
             variant={columns === 3 ? "accent" : "ghost"}
             size="sm"
             className="h-7 px-2.5 rounded-full text-xs gap-1"
             onClick={() => onColumnsChange(3)}
-            title="3 Columns"
+            title="Three column"
           >
             <Columns3 className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">3 Cols</span>
+            <span className="hidden sm:inline">Three column</span>
           </Button>
         </div>
       )}
