@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { TransposeController } from "@/components/songs/transpose-controller";
 import { ChordRenderer } from "@/components/songs/chord-renderer";
+import { TwoColumnChordRenderer } from "@/components/songs/two-column-chord-renderer";
 import { ViewerToolbar } from "@/components/songs/viewer-toolbar";
 import { useAutoScroll } from "@/hooks/use-auto-scroll";
 import { useFontScale } from "@/hooks/use-large-text-mode";
@@ -83,9 +84,21 @@ export function PublicSongClient({ song }: { song: Song | null }) {
 
           <Card className={cn(stageMode && "bg-[#0c0714] text-white border-transparent")}>
             <CardContent ref={viewerRef} className={cn("max-h-[70vh] overflow-y-auto p-6 sm:p-8", isScrolling && "auto-scroll-active")}>
-              <div className={cn(twoColumn && "columns-2 gap-8")}>
-                <ChordRenderer chordSheet={song.chordSheet} songKey={song.key} semitones={semitones} fontScale={scale} />
-              </div>
+              {twoColumn ? (
+                <TwoColumnChordRenderer
+                  chordSheet={song.chordSheet}
+                  songKey={song.key}
+                  semitones={semitones}
+                  fontScale={scale}
+                />
+              ) : (
+                <ChordRenderer
+                  chordSheet={song.chordSheet}
+                  songKey={song.key}
+                  semitones={semitones}
+                  fontScale={scale}
+                />
+              )}
             </CardContent>
           </Card>
 

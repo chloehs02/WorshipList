@@ -12,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FavoriteButton } from "./favorite-button";
 import { TransposeController } from "./transpose-controller";
 import { ChordRenderer } from "./chord-renderer";
+import { TwoColumnChordRenderer } from "./two-column-chord-renderer";
 import { ViewerToolbar } from "./viewer-toolbar";
 import { ShareModal } from "@/components/sharing/share-modal";
 import { toggleFavorite, deleteSong } from "@/app/actions/songs";
@@ -117,10 +118,21 @@ export function SongDetailClient({ song: initialSong }: { song: Song }) {
             ref={viewerRef}
             className={cn("max-h-[65vh] overflow-y-auto p-6 sm:p-8", isScrolling && "auto-scroll-active")}
           >
-            {/* Two-column wrapper: splits chord blocks side by side */}
-            <div className={cn(twoColumn && "columns-2 gap-8")}>
-              <ChordRenderer chordSheet={song.chordSheet} songKey={song.key} semitones={semitones} fontScale={scale} />
-            </div>
+            {twoColumn ? (
+              <TwoColumnChordRenderer
+                chordSheet={song.chordSheet}
+                songKey={song.key}
+                semitones={semitones}
+                fontScale={scale}
+              />
+            ) : (
+              <ChordRenderer
+                chordSheet={song.chordSheet}
+                songKey={song.key}
+                semitones={semitones}
+                fontScale={scale}
+              />
+            )}
           </CardContent>
         </Card>
 
