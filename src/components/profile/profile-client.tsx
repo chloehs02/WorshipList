@@ -14,6 +14,8 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { initials } from "@/lib/utils";
 import { signOutAction } from "@/app/actions/auth";
+import { createClient } from "@/lib/supabase/client";
+import { Loader2 } from "lucide-react";
 import type { TeamMember, UserProfile } from "@/types";
 
 export function ProfileClient({ user, initialMembers }: { user: UserProfile; initialMembers: TeamMember[] }) {
@@ -24,6 +26,10 @@ export function ProfileClient({ user, initialMembers }: { user: UserProfile; ini
   const [members, setMembers] = React.useState(initialMembers);
   const [stageDefault, setStageDefault] = React.useState(false);
   const [signingOut, setSigningOut] = React.useState(false);
+  
+  const [newPassword, setNewPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const [updatingPassword, setUpdatingPassword] = React.useState(false);
 
   function handleSaveProfile(e: React.FormEvent) {
     e.preventDefault();
@@ -47,6 +53,32 @@ export function ProfileClient({ user, initialMembers }: { user: UserProfile; ini
   function handleRemoveMember(id: string) {
     setMembers((prev) => prev.filter((m) => m.id !== id));
     toast.success("Member removed from team");
+  }
+
+  async function handleUpdatePassword(e: React.FormEvent) {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+    if (newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters.");
+      return;
+    }
+    setUpdatingPassword(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) throw error;
+      toast.success("Password updated successfully.");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to update password.";
+      toast.error(message);
+    } finally {
+      setUpdatingPassword(false);
+    }
   }
 
   return (
@@ -82,6 +114,43 @@ export function ProfileClient({ user, initialMembers }: { user: UserProfile; ini
               </div>
             </div>
             <Button type="submit" className="rounded-full">Save changes</Button>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Account security</CardTitle>
+          <CardDescription>Update your password.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleUpdatePassword} className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label>New password</Label>
+                <Input 
+                  type="password" 
+                  value={newPassword} 
+                  onChange={(e) => setNewPassword(e.target.value)} 
+                  placeholder="••••••••" 
+                  required 
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Confirm new password</Label>
+                <Input 
+                  type="password" 
+                  value={confirmPassword} 
+                  onChange={(e) => setConfirmPassword(e.target.value)} 
+                  placeholder="••••••••" 
+                  required 
+                />
+              </div>
+            </div>
+            <Button type="submit" disabled={updatingPassword} className="rounded-full gap-2">
+              {updatingPassword && <Loader2 className="h-4 w-4 animate-spin" />}
+              Update password
+            </Button>
           </form>
         </CardContent>
       </Card>
