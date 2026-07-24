@@ -9,7 +9,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { TransposeController } from "@/components/songs/transpose-controller";
 import { ChordRenderer } from "@/components/songs/chord-renderer";
-import { TwoColumnChordRenderer } from "@/components/songs/two-column-chord-renderer";
 import { ViewerToolbar } from "@/components/songs/viewer-toolbar";
 import { useAutoScroll } from "@/hooks/use-auto-scroll";
 import { useFontScale } from "@/hooks/use-large-text-mode";
@@ -19,7 +18,8 @@ import type { Song } from "@/types";
 export function PublicSongClient({ song }: { song: Song | null }) {
   const [semitones, setSemitones] = React.useState(0);
   const [stageMode, setStageMode] = React.useState(false);
-  const [twoColumn, setTwoColumn] = React.useState(false);
+  const [showChords, setShowChords] = React.useState(true);
+  const [columns, setColumns] = React.useState<1 | 2 | 3>(2);
   const viewerRef = React.useRef<HTMLDivElement>(null);
   const { scale, increase, decrease } = useFontScale(1);
   const { isScrolling, toggle, speed, setSpeed } = useAutoScroll(viewerRef);
@@ -50,7 +50,7 @@ export function PublicSongClient({ song }: { song: Song | null }) {
           </Button>
         </div>
       ) : (
-        <div className={cn("mx-auto max-w-3xl space-y-5 px-5 py-8 md:px-8", stageMode && "stage-mode")}>
+        <div className={cn("mx-auto space-y-5 px-5 py-8 md:px-8 transition-all", columns > 1 ? "max-w-6xl" : "max-w-3xl", stageMode && "stage-mode")}>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h1 className="font-display text-2xl font-bold sm:text-3xl">{song.title}</h1>
@@ -78,27 +78,22 @@ export function PublicSongClient({ song }: { song: Song | null }) {
             onToggleScroll={toggle}
             scrollSpeed={speed}
             onScrollSpeedChange={setSpeed}
-            twoColumn={twoColumn}
-            onToggleTwoColumn={() => setTwoColumn((v) => !v)}
+            showChords={showChords}
+            onToggleShowChords={() => setShowChords((v) => !v)}
+            columns={columns}
+            onColumnsChange={setColumns}
           />
 
           <Card className={cn(stageMode && "bg-[#0c0714] text-white border-transparent")}>
             <CardContent ref={viewerRef} className={cn("max-h-[70vh] overflow-y-auto p-6 sm:p-8", isScrolling && "auto-scroll-active")}>
-              {twoColumn ? (
-                <TwoColumnChordRenderer
-                  chordSheet={song.chordSheet}
-                  songKey={song.key}
-                  semitones={semitones}
-                  fontScale={scale}
-                />
-              ) : (
-                <ChordRenderer
-                  chordSheet={song.chordSheet}
-                  songKey={song.key}
-                  semitones={semitones}
-                  fontScale={scale}
-                />
-              )}
+              <ChordRenderer
+                chordSheet={song.chordSheet}
+                songKey={song.key}
+                semitones={semitones}
+                fontScale={scale}
+                showChords={showChords}
+                columns={columns}
+              />
             </CardContent>
           </Card>
 

@@ -30,6 +30,8 @@ interface SongRowProps {
 function SongRow({ item, index }: SongRowProps) {
   const [expanded, setExpanded] = React.useState(false);
   const [semitones, setSemitones] = React.useState(0);
+  const [showChords, setShowChords] = React.useState(true);
+  const [columns, setColumns] = React.useState<1 | 2 | 3>(2);
   const song = item.song;
   const effectiveKey = item.keyOverride ?? song.key;
 
@@ -92,8 +94,35 @@ function SongRow({ item, index }: SongRowProps) {
             {song.capo > 0 && <Badge variant="outline">Capo {song.capo}</Badge>}
           </div>
 
-          <div className="mb-4 flex items-center justify-between gap-4">
-            <p className="text-sm font-medium text-muted-foreground">Chords & Lyrics</p>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <Button
+                variant={showChords ? "secondary" : "outline"}
+                size="sm"
+                className="h-7 text-xs rounded-full"
+                onClick={() => setShowChords((v) => !v)}
+              >
+                {showChords ? "Hide chords" : "Show chords"}
+              </Button>
+              <div className="flex items-center gap-1 rounded-full bg-secondary/50 p-1">
+                <Button
+                  variant={columns === 1 ? "accent" : "ghost"}
+                  size="sm"
+                  className="h-6 px-2 text-[11px] rounded-full"
+                  onClick={() => setColumns(1)}
+                >
+                  1 Col
+                </Button>
+                <Button
+                  variant={columns === 2 ? "accent" : "ghost"}
+                  size="sm"
+                  className="h-6 px-2 text-[11px] rounded-full"
+                  onClick={() => setColumns(2)}
+                >
+                  2 Cols
+                </Button>
+              </div>
+            </div>
             <TransposeController
               originalKey={effectiveKey}
               semitones={semitones}
@@ -108,6 +137,8 @@ function SongRow({ item, index }: SongRowProps) {
                 songKey={effectiveKey}
                 semitones={semitones}
                 fontScale={1}
+                showChords={showChords}
+                columns={columns}
               />
             </div>
           ) : (
