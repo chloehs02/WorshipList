@@ -6,6 +6,7 @@ const PUBLIC_PATHS = ["/", "/login", "/register"];
 function isPublicPath(pathname: string) {
   if (PUBLIC_PATHS.includes(pathname)) return true;
   if (pathname.startsWith("/song/")) return true; // public shared song links
+  if (pathname.startsWith("/s/")) return true;    // public shared setlist links (UUID token)
   return false;
 }
 

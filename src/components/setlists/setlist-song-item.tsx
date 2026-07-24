@@ -55,7 +55,7 @@ export function SetlistSongItem({ item, index, onRemove, readOnly = false }: Set
         <Music2 className="h-4 w-4" />
       </div>
 
-      <Link href={`/songs/${item.song.slug}`} className="min-w-0 flex-1">
+      <Link href={readOnly ? `/song/${item.song.slug}` : `/songs/${item.song.slug}`} className="min-w-0 flex-1">
         <p className="truncate font-medium">{item.song.title}</p>
         <p className="truncate text-xs text-muted-foreground">{item.song.artist}</p>
       </Link>

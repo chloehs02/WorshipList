@@ -60,7 +60,7 @@ export function SongDetailClient({ song: initialSong }: { song: Song }) {
         title={song.title}
         actions={
           <div className="hidden items-center gap-2 md:flex">
-            <ShareModal slug={song.slug} title={song.title} />
+            <ShareModal resourceId={song.slug} resourceType="song" title={song.title} />
             <Button asChild variant="outline" size="sm" className="gap-1.5 rounded-full">
               <Link href={`/songs/${song.slug}/edit`}>
                 <Pencil className="h-3.5 w-3.5" /> Edit
@@ -128,7 +128,7 @@ export function SongDetailClient({ song: initialSong }: { song: Song }) {
         )}
 
         <div className="flex items-center gap-2 md:hidden">
-          <ShareModal slug={song.slug} title={song.title} trigger={<Button variant="outline" className="flex-1 rounded-full">Share</Button>} />
+          <ShareModal resourceId={song.slug} resourceType="song" title={song.title} trigger={<Button variant="outline" className="flex-1 rounded-full">Share</Button>} />
           <Button asChild variant="outline" className="flex-1 gap-1.5 rounded-full">
             <Link href={`/songs/${song.slug}/edit`}>
               <Pencil className="h-3.5 w-3.5" /> Edit

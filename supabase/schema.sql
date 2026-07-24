@@ -319,3 +319,59 @@ create policy "Song owners manage shares" on public.shared_permissions
 drop policy if exists "Users manage own favorites" on public.favorites;
 create policy "Users manage own favorites" on public.favorites
   for all using (user_id = auth.uid());
+
+-- ---------------------------------------------------------------------------
+-- share_links: UUID token → setlist for public (anonymous) sharing
+-- ---------------------------------------------------------------------------
+create table if not exists public.share_links (
+  token uuid primary key default gen_random_uuid(),
+  setlist_id uuid not null references public.setlists (id) on delete cascade,
+  created_at timestamptz not null default now(),
+  unique (setlist_id)  -- one share link per setlist
+);
+
+create index if not exists share_links_setlist_id_idx on public.share_links (setlist_id);
+
+alter table public.share_links enable row level security;
+
+-- Anyone (including anon) can look up a share link by token to view a setlist
+drop policy if exists "Anyone can read share links" on public.share_links;
+create policy "Anyone can read share links" on public.share_links
+  for select using (true);
+
+-- Only the creator of the linked setlist can create a share link
+drop policy if exists "Setlist creator can create share links" on public.share_links;
+create policy "Setlist creator can create share links" on public.share_links
+  for insert with check (
+    setlist_id in (select id from public.setlists where created_by = auth.uid())
+  );
+
+-- Only the creator of the linked setlist can delete a share link
+drop policy if exists "Setlist creator can delete share links" on public.share_links;
+create policy "Setlist creator can delete share links" on public.share_links
+  for delete using (
+    setlist_id in (select id from public.setlists where created_by = auth.uid())
+  );
+
+-- Allow anon to read setlists + setlist_songs + songs when they have a valid share token
+-- (Add these policies so the public /s/[token] page can fetch data without auth)
+
+drop policy if exists "Anon can read setlists via share token" on public.setlists;
+create policy "Anon can read setlists via share token" on public.setlists
+  for select using (
+    created_by = auth.uid()
+    or team_id = public.current_team_id()
+    or id in (select setlist_id from public.share_links)
+  );
+
+drop policy if exists "Anon can read setlist songs via share token" on public.setlist_songs;
+create policy "Anon can read setlist songs via share token" on public.setlist_songs
+  for select using (
+    setlist_id in (
+      select id from public.setlists
+      where created_by = auth.uid()
+         or team_id = public.current_team_id()
+         or id in (select setlist_id from public.share_links)
+    )
+  );
+

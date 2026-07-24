@@ -30,7 +30,8 @@ export default async function SetlistDetailPage({ params }: { params: Promise<{ 
         title={setlist.title}
         actions={
           <ShareModal
-            slug={`setlist-${setlist.id}`}
+            resourceId={setlist.id}
+            resourceType="setlist"
             title={setlist.title}
             trigger={
               <Button variant="outline" size="sm" className="gap-1.5 rounded-full">

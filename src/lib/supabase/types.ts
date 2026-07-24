@@ -88,6 +88,15 @@ export interface Database {
         Insert: { user_id: string; song_id: string };
         Update: Partial<{ user_id: string; song_id: string }>;
       };
+      share_links: {
+        Row: {
+          token: string;
+          setlist_id: string;
+          created_at: string;
+        };
+        Insert: { token: string; setlist_id: string };
+        Update: Partial<{ token: string; setlist_id: string }>;
+      };
     };
     Views: {
       [_ in never]: never;
