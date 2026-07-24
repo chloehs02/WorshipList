@@ -25,6 +25,7 @@ export function SongDetailClient({ song: initialSong }: { song: Song }) {
   const [song, setSong] = React.useState(initialSong);
   const [semitones, setSemitones] = React.useState(0);
   const [stageMode, setStageMode] = React.useState(false);
+  const [twoColumn, setTwoColumn] = React.useState(false);
   const [deleting, setDeleting] = React.useState(false);
   const viewerRef = React.useRef<HTMLDivElement>(null);
   const { scale, increase, decrease } = useFontScale(1);
@@ -107,6 +108,8 @@ export function SongDetailClient({ song: initialSong }: { song: Song }) {
           onToggleScroll={toggle}
           scrollSpeed={speed}
           onScrollSpeedChange={setSpeed}
+          twoColumn={twoColumn}
+          onToggleTwoColumn={() => setTwoColumn((v) => !v)}
         />
 
         <Card className={cn(stageMode && "bg-[#0c0714] text-white border-transparent")}>
@@ -114,7 +117,10 @@ export function SongDetailClient({ song: initialSong }: { song: Song }) {
             ref={viewerRef}
             className={cn("max-h-[65vh] overflow-y-auto p-6 sm:p-8", isScrolling && "auto-scroll-active")}
           >
-            <ChordRenderer chordSheet={song.chordSheet} songKey={song.key} semitones={semitones} fontScale={scale} />
+            {/* Two-column wrapper: splits chord blocks side by side */}
+            <div className={cn(twoColumn && "columns-2 gap-8")}>
+              <ChordRenderer chordSheet={song.chordSheet} songKey={song.key} semitones={semitones} fontScale={scale} />
+            </div>
           </CardContent>
         </Card>
 

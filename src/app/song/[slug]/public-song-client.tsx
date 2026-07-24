@@ -18,6 +18,7 @@ import type { Song } from "@/types";
 export function PublicSongClient({ song }: { song: Song | null }) {
   const [semitones, setSemitones] = React.useState(0);
   const [stageMode, setStageMode] = React.useState(false);
+  const [twoColumn, setTwoColumn] = React.useState(false);
   const viewerRef = React.useRef<HTMLDivElement>(null);
   const { scale, increase, decrease } = useFontScale(1);
   const { isScrolling, toggle, speed, setSpeed } = useAutoScroll(viewerRef);
@@ -76,11 +77,15 @@ export function PublicSongClient({ song }: { song: Song | null }) {
             onToggleScroll={toggle}
             scrollSpeed={speed}
             onScrollSpeedChange={setSpeed}
+            twoColumn={twoColumn}
+            onToggleTwoColumn={() => setTwoColumn((v) => !v)}
           />
 
           <Card className={cn(stageMode && "bg-[#0c0714] text-white border-transparent")}>
             <CardContent ref={viewerRef} className={cn("max-h-[70vh] overflow-y-auto p-6 sm:p-8", isScrolling && "auto-scroll-active")}>
-              <ChordRenderer chordSheet={song.chordSheet} songKey={song.key} semitones={semitones} fontScale={scale} />
+              <div className={cn(twoColumn && "columns-2 gap-8")}>
+                <ChordRenderer chordSheet={song.chordSheet} songKey={song.key} semitones={semitones} fontScale={scale} />
+              </div>
             </CardContent>
           </Card>
 

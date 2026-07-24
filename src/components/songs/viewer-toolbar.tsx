@@ -1,6 +1,6 @@
 "use client";
 
-import { Minus, Plus, Play, Pause, Type } from "lucide-react";
+import { Minus, Plus, Play, Pause, Type, Columns2, AlignLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,8 @@ interface ViewerToolbarProps {
   onToggleScroll: () => void;
   scrollSpeed: number;
   onScrollSpeedChange: (v: number) => void;
+  twoColumn?: boolean;
+  onToggleTwoColumn?: () => void;
   className?: string;
 }
 
@@ -28,6 +30,8 @@ export function ViewerToolbar({
   onToggleScroll,
   scrollSpeed,
   onScrollSpeedChange,
+  twoColumn = false,
+  onToggleTwoColumn,
   className,
 }: ViewerToolbarProps) {
   return (
@@ -41,6 +45,21 @@ export function ViewerToolbar({
           <Plus className="h-3.5 w-3.5" />
         </Button>
       </div>
+
+      {/* 2-column toggle */}
+      {onToggleTwoColumn && (
+        <Button
+          variant={twoColumn ? "accent" : "outline"}
+          size="sm"
+          className="gap-1.5 rounded-full"
+          onClick={onToggleTwoColumn}
+          aria-label={twoColumn ? "Switch to single column" : "Switch to 2 columns"}
+          title={twoColumn ? "1 column" : "2 columns"}
+        >
+          {twoColumn ? <AlignLeft className="h-3.5 w-3.5" /> : <Columns2 className="h-3.5 w-3.5" />}
+          <span className="hidden sm:inline">{twoColumn ? "1 col" : "2 cols"}</span>
+        </Button>
+      )}
 
       <Button
         variant={stageMode ? "accent" : "outline"}
