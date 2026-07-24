@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 25% 98%;
+    --foreground: 260 25% 8%;
+    --card: 0 0% 100%;
+    --card-foreground: 260 25% 8%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 260 25% 8%;
+    --primary: 271 76% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 260 20% 94%;
+    --secondary-foreground: 260 25% 12%;
+    --muted: 260 15% 94%;
+    --muted-foreground: 260 10% 40%;
+    --accent: 73 89% 61%;
+    --accent-foreground: 260 25% 10%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 260 15% 88%;
+    --input: 260 15% 88%;
+    --ring: 271 76% 53%;
+    --chord: 271 76% 45%;
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 258 32% 6%;
+    --foreground: 260 20% 96%;
+    --card: 258 28% 9%;
+    --card-foreground: 260 20% 96%;
+    --popover: 258 28% 9%;
+    --popover-foreground: 260 20% 96%;
+    --primary: 271 91% 65%;
+    --primary-foreground: 260 25% 8%;
+    --secondary: 258 20% 14%;
+    --secondary-foreground: 260 20% 96%;
+    --muted: 258 18% 14%;
+    --muted-foreground: 260 10% 65%;
+    --accent: 73 89% 61%;
+    --accent-foreground: 260 25% 8%;
+    --destructive: 0 63% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 258 18% 18%;
+    --input: 258 18% 18%;
+    --ring: 271 91% 65%;
+    --chord: 73 89% 61%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  ::selection {
+    @apply bg-accent/30;
+  }
+}
+
+@layer utilities {
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .glass {
+    @apply bg-card/70 backdrop-blur-xl border border-white/10;
+  }
+}
+
+/* Large text / stage mode */
+.stage-mode .lyric-line {
+  font-size: 1.65em !important;
+  line-height: 2.1 !important;
+}
+.stage-mode .chord-token {
+  font-size: 1.05em !important;
+}
+
+/* Auto-scroll smoothness */
+.auto-scroll-active {
+  scroll-behavior: smooth;
+}
